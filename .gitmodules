@@ -1,0 +1,6 @@
+[submodule "packages/gatsby-theme-datocms"]
+	path = packages/gatsby-theme-datocms
+	url = https://github.com/marcinsydor/gatsby-theme-datocms.git
+[submodule "packages/gatsby-theme-ui"]
+	path = packages/gatsby-theme-ui
+	url = https://github.com/marcinsydor/gatsby-theme-ui.git
