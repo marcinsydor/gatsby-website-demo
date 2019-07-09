@@ -3,7 +3,7 @@ require("dotenv").config({
 });
 
 module.exports = {
-  plugins: [
+  __experimentalThemes: [
     {
       resolve: `gatsby-theme-datocms`,
       options: {
@@ -17,7 +17,9 @@ module.exports = {
           previewMode: process.env.DATOCMS_PREVIEW === "true"
         }
       }
-    },
+    }
+  ],
+  plugins: [
     {
       resolve: "gatsby-theme-ui"
     },
