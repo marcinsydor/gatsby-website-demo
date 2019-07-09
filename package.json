@@ -9,10 +9,13 @@
     "dev": "gatsby develop",
     "build": "gatsby build",
     "format": "prettier --write src/**/*.{js,jsx,scss,html}",
-    "clean": "find . -type f -name '._*' -delete"
+    "clean-cache": "find . -name '.cache' -exec rm -rf '{}' +",
+    "cleanmodules": "find . -name 'node_modules' -exec rm -rf '{}' +",
+    "clean-dot": "find . -type f -name '._*' -delete",
+    "clean": "yarn clean-cache && yarn cleanmodules && yarn clean-dot && rm -f yarn.lock && rm -r ./public/"
   },
   "dependencies": {
-    "gatsby": "^2.13.3",
+    "gatsby": "2.9.10",
     "gatsby-theme-datocms": "*",
     "gatsby-theme-ui": "*",
     "react": "^16.8.6",
