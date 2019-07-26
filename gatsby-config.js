@@ -7,11 +7,6 @@ module.exports = {
     {
       resolve: `gatsby-theme-datocms`,
       options: {
-        siteMetadata: {
-          title: "Gatsby Website Demo",
-          description: `Simple Gatsby website demo`,
-          siteUrl: "https://google.com"
-        },
         datacms: {
           apiToken: process.env.DATOCMS_API_TOKEN,
           previewMode: process.env.DATOCMS_PREVIEW === "true"
