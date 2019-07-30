@@ -27,12 +27,21 @@ let rootBackupDir = "backup";
 let backupDir = join(rootBackupDir, new Date().toJSON().toString());
 let imagesDir = join(backupDir, "images");
 
+const itemTypesMap = new Map();
+const fieldsMap = new Map();
+
 async function init() {
   sourceSite = await sourceClient.site.find();
-  console.log("source site name:", sourceSite.name);
+  // console.log("source site name:", sourceSite.name);
 
   targetSite = await targetClient.site.find();
-  console.log("target site name:", targetSite.name);
+  // console.log("target site name:", targetSite.name);
+
+  // const ok = await yesno({
+  //   question: `Restoring data from "${sourceSite.name}" to "${targetSite.name}" \nAre you sure you want to do it [yes, no]?`
+  // });
+
+  // if (!ok) return;
 
   await createDirs();
   await getSourceItemTypesAndFields();
@@ -41,8 +50,8 @@ async function init() {
 
   if (targetClient) {
     await destroyTargetItemTypesAndFields();
-    // await createTargetItemTypesAndFields();
-    await createTargetRecords();
+    await createTargetItemTypesAndFields();
+    // await createTargetRecords();
   }
 
   console.log("done");
@@ -63,19 +72,18 @@ async function createDirs() {
 }
 
 async function getSourceItemTypesAndFields() {
+  console.log("getSourceItemTypesAndFields - start");
   const itemTypes = await sourceClient.itemTypes.all({});
   writeFileSync(
     join(backupDir, "item-types.json"),
     JSON.stringify(itemTypes, null, 2)
   );
-
-  console.log("read all fileds");
   await Promise.all(
     itemTypes.map(async itemType => {
       await getSourceFields(itemType.id);
     })
   );
-  console.log("done! -read all fileds");
+  console.log("getSourceItemTypesAndFields - complete");
 }
 
 async function getSourceFields(itemTypeId) {
@@ -99,35 +107,88 @@ async function createTargetRecords() {
 }
 
 async function destroyTargetItemTypesAndFields() {
-  // Remove all current item types
-  const currentAllItemTypes = await targetClient.itemTypes.all();
-  await Promise.all(
-    currentAllItemTypes.map(
-      async type => await targetClient.itemTypes.destroy(type.id)
-    )
-  );
+  try {
+    console.log(`destroyTargetItemTypesAndFields - start`);
+    const itemTypes = await targetClient.itemTypes.all();
+    await Promise.all(
+      itemTypes.map(async type => {
+        console.log(`destroyTargetItemTypesAndFields - destroy: ${type.id}`);
+        await targetClient.itemTypes.destroy(type.id);
+        await destroyTargetFields(type.id);
+        console.log(
+          `destroyTargetItemTypesAndFields - destroy complete: ${type.id}`
+        );
+      })
+    );
+    console.log(`================= destroyTargetItemTypesAndFields - complete`);
+  } catch (e) {
+    console.log(`destroyTargetItemTypesAndFields - error: ${e}`);
+  }
+}
 
-  // Remove all current item types fields
-  const currentAllItemTypesFields = await targetClient.fields.all();
-  await Promise.all(
-    currentAllItemTypesFields.map(
-      async type => await targetClient.fields.destroy(type.id)
-    )
-  );
+async function destroyTargetFields(itemTypeId) {
+  try {
+    console.log(`destroyTargetFields - start`);
+    const fields = await targetClient.fields.all(itemTypeId);
+    console.log(`destroyTargetFields - start, fields: ${fields}`);
+    await Promise.all(
+      fields.map(async type => await targetClient.fields.destroy(type.id))
+    );
+    console.log(`destroyTargetFields - complete`);
+  } catch (e) {
+    console.log(`destroyTargetFields - error: ${e}`);
+  }
 }
 
 async function createTargetItemTypesAndFields() {
-  const types = JSON.parse(readFileSync(join(backupDir, "item-types.json")));
+  console.log(`createTargetItemTypesAndFields - start`);
+  const itemTypes = JSON.parse(
+    readFileSync(join(backupDir, "item-types.json"))
+  );
 
   await Promise.all(
-    types.map(async type => {
+    itemTypes.map(async type => {
       const { id, ...withoutId } = type;
       console.log(type.name, id);
       try {
-        const newType = await targetClient.itemTypes.create(withoutId);
-        console.log("done", newType.name, newType.id);
+        const newTypeItem = await targetClient.itemTypes.create(withoutId);
+        itemTypesMap.set(id, newTypeItem.id);
+        console.log(
+          `create itemType: ${newTypeItem.name}, ${id} > ${newTypeItem.id}`
+        );
       } catch (e) {
-        console.log("error", withoutId.name);
+        console.log("error", withoutId.name, e);
+      }
+    })
+  );
+
+  await Promise.all(
+    Array.from(itemTypesMap).map(async (key, value) => {
+      // TODO find better way to do map Map
+      await createTargetFields(key[0], key[1]);
+    })
+  );
+
+  console.log(`createTargetItemTypesAndFields - complete`);
+}
+
+async function createTargetFields(oldItemTypeId, newItemTypeId) {
+  console.log(`createTargetFields - start, ${oldItemTypeId}, ${newItemTypeId}`);
+  const fields = JSON.parse(
+    readFileSync(join(backupDir, `item-types-${oldItemTypeId}-fields.json`))
+  );
+
+  await Promise.all(
+    fields.map(async field => {
+      const { id, ...fieldWithoutId } = field;
+      try {
+        const newField = await targetClient.fields.create(
+          newItemTypeId,
+          fieldWithoutId
+        );
+        fieldsMap.set(id, newField.id);
+      } catch (e) {
+        console.log(`create filed error: ${e}`);
       }
     })
   );

@@ -16,22 +16,23 @@
     "backup": "node -r esm backup.js"
   },
   "dependencies": {
+    "esm": "^3.2.25",
     "gatsby": "2.9.10",
     "gatsby-theme-datocms": "*",
     "gatsby-theme-ui": "*",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "esm": "^3.2.25"
+    "yesno": "^0.3.0"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
+    "datocms-client": "^2.0.7",
     "eslint-config-google": "^0.13.0",
     "eslint-config-prettier": "4.3.0",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-prettier": "^3.1.0",
-    "prettier": "^1.18.1",
-    "datocms-client": "^2.0.7"
+    "prettier": "^1.18.1"
   }
 }

@@ -14459,6 +14459,11 @@ yeast@0.1.2:
   resolved "https://registry.yarnpkg.com/yeast/-/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
   integrity sha1-AI4G2AlDIMNy28L47XagymyKxBk=
 
+yesno@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/yesno/-/yesno-0.3.0.tgz#ef8f884ffed0d3d9ff0ff7d18a3977e78343e150"
+  integrity sha512-42pJ2AcO/2i/g3wHRygfWjR+Ph//Dxn37i31nC3toOLMKgCxBt6XD9M7b87vhspSqCNzsMwckRhz7nRXc9K2QA==
+
 yoga-layout-prebuilt@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/yoga-layout-prebuilt/-/yoga-layout-prebuilt-1.9.3.tgz#11e3be29096afe3c284e5d963cc2d628148c1372"
