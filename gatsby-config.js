@@ -14,6 +14,9 @@ module.exports = {
       }
     }
   ],
+  siteMetadata: {
+    siteUrl: `https://magmarconstruction.co.uk/`
+  },
   plugins: [
     {
       resolve: "gatsby-theme-ui"
