@@ -15,7 +15,7 @@ module.exports = {
     }
   ],
   siteMetadata: {
-    siteUrl: `https://magmarconstruction.co.uk/`
+    siteUrl: `https://gatsbywebsitedemo.netlify.com/`
   },
   plugins: [
     {

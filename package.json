@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "esm": "^3.2.25",
-    "gatsby": "2.13.25",
+    "gatsby": "2.15.2",
     "gatsby-theme-datocms": "*",
     "gatsby-theme-ui": "*",
     "react": "^16.8.6",
