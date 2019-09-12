@@ -9,10 +9,6 @@ const mg = mailgun({
   host: process.env.MAILGUN_HOST
 });
 
-console.log("key", process.env.MAILGUN_API_KEY);
-console.log("domain", process.env.MAILGUN_DOMAIN);
-console.log("host", process.env.MAILGUN_HOST);
-
 const successCode = 200;
 const errorCode = 400;
 const headers = {
@@ -21,6 +17,11 @@ const headers = {
 };
 
 exports.handler = function(event, context, callback) {
+  console.log("key", process.env.MAILGUN_API_KEY);
+  console.log("domain", process.env.MAILGUN_DOMAIN);
+  console.log("host", process.env.MAILGUN_HOST);
+  console.log("admin", process.env.ADMIN_EMAIL);
+
   let data = JSON.parse(event.body);
   let { name, email, subject, message } = data;
   let mailOptions = {
