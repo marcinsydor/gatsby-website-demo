@@ -17,22 +17,16 @@ const headers = {
 };
 
 exports.handler = function(event, context, callback) {
-  console.log("key", process.env.MAILGUN_API_KEY);
-  console.log("domain", process.env.MAILGUN_DOMAIN);
-  console.log("host", process.env.MAILGUN_HOST);
-  console.log("admin", process.env.ADMIN_EMAIL);
 
   let data = JSON.parse(event.body);
-  let { name, email, subject, message } = data;
+  let { name, email, phone, message } = data;
   let mailOptions = {
     from: `${name} <${email}>`,
     to: process.env.ADMIN_EMAIL,
     replyTo: email,
-    subject: subject,
+    subject: `Enquiry from ${name} ${phone}`,
     text: message
   };
-
-  console.log(`mailOptions: ${JSON.stringify(mailOptions)}`);
 
   mg.messages().send(mailOptions, (error, body) => {
     if (error) {
