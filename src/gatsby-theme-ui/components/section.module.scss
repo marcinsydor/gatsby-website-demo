@@ -1,0 +1,10 @@
+@import "~gatsby-theme-ui/src/components/section.base.module";
+
+.host {
+  &.content {
+    min-height: 400px;
+  }
+
+  &.contactForm {
+  }
+}
